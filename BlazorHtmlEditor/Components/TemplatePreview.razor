@@ -1,0 +1,169 @@
+@typeparam TModel
+@using BlazorHtmlEditor.Services
+@inject IRazorRenderService RenderService
+
+<div class="template-preview-container">
+    @if (isRendering)
+    {
+        <div class="preview-loading">
+            <div class="spinner"></div>
+            <p>Rendering preview...</p>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(renderError))
+    {
+        <div class="preview-error">
+            <h4>❌ Render Error</h4>
+            <pre>@renderError</pre>
+        </div>
+    }
+    else
+    {
+        <div class="preview-rendered">
+            @((MarkupString)renderedHtml)
+        </div>
+    }
+</div>
+
+<style>
+    .template-preview-container {
+        width: 100%;
+        height: 100%;
+        background: white;
+    }
+
+    .preview-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        color: #666;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #0066cc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+    }
+
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .preview-error {
+        padding: 20px;
+        background: #fff5f5;
+        border: 1px solid #fc8181;
+        border-radius: 8px;
+        margin: 20px;
+    }
+
+    .preview-error h4 {
+        color: #c53030;
+        margin-top: 0;
+    }
+
+    .preview-error pre {
+        background: #2d2d2d;
+        color: #f8f8f2;
+        padding: 16px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .preview-rendered {
+        padding: 0;
+        min-height: 100%;
+    }
+</style>
+
+@code {
+    /// <summary>
+    /// Gets or sets the Razor template to render.
+    /// This parameter is required and contains the template code to compile and execute.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string RazorTemplate { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the demo data model to use for rendering the preview.
+    /// This parameter is required and provides the data bound to @Model in the template.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public TModel? DemoData { get; set; }
+
+    /// <summary>
+    /// Stores the rendered HTML output from the Razor template.
+    /// This HTML is displayed in the preview area using MarkupString.
+    /// </summary>
+    private string renderedHtml = string.Empty;
+
+    /// <summary>
+    /// Stores any rendering or compilation errors that occur.
+    /// Displayed to the user when the template fails to compile or render.
+    /// </summary>
+    private string renderError = string.Empty;
+
+    /// <summary>
+    /// Flag indicating whether rendering is currently in progress.
+    /// Used to show a loading spinner during template compilation and rendering.
+    /// </summary>
+    private bool isRendering = false;
+
+    /// <summary>
+    /// Lifecycle method called when component parameters change.
+    /// Triggers re-rendering of the template whenever the template or data changes.
+    /// </summary>
+    protected override async Task OnParametersSetAsync()
+    {
+        await RenderTemplate();
+    }
+
+    /// <summary>
+    /// Renders the Razor template with the demo data.
+    /// This method compiles the template using RazorLight and generates HTML output.
+    /// Handles errors gracefully by displaying error messages in the UI.
+    /// </summary>
+    private async Task RenderTemplate()
+    {
+        // Check if we have valid template and data
+        if (string.IsNullOrWhiteSpace(RazorTemplate) || DemoData == null)
+        {
+            renderedHtml = "<p style='color: #999; padding: 20px;'>No template to preview</p>";
+            return;
+        }
+
+        // Show loading state
+        isRendering = true;
+        renderError = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            // Use RazorLight to compile and render the template with the demo data
+            // This calls the IRazorRenderService which handles the RazorLight engine
+            renderedHtml = await RenderService.RenderAsync(RazorTemplate, DemoData);
+        }
+        catch (Exception ex)
+        {
+            // Capture any compilation or runtime errors
+            // Display the error type, message, and stack trace to help debugging
+            renderError = $"{ex.GetType().Name}: {ex.Message}\n\n{ex.StackTrace}";
+            renderedHtml = string.Empty;
+        }
+        finally
+        {
+            // Hide loading state and update UI
+            isRendering = false;
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,41 @@
+@page "/editor"
+@using BlazorHtmlEditor.Demo.Server.Models
+@rendermode InteractiveServer
+
+<PageTitle>Template Editor - Blazor HTML Editor</PageTitle>
+
+<div style="height: 100vh; display: flex; flex-direction: column;">
+    <TemplateEditor TModel="SampleModel"
+                    Title="Customer Template Editor"
+                    InitialContent="@initialTemplate"
+                    OnContentChanged="OnTemplateChanged"
+                    OnSave="OnTemplateSaved"
+                    ShowSaveButton="true"
+                    ShowPropertiesPanel="true" />
+</div>
+
+@if (showSaveNotification)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div class="toast show" role="alert">
+            <div class="toast-header bg-success text-white">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close" @onclick="() => showSaveNotification = false"></button>
+            </div>
+            <div class="toast-body">
+                Template saved successfully!
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .toast-container {
+        z-index: 9999;
+    }
+
+    .toast {
+        min-width: 250px;
+    }
+</style>

@@ -1,0 +1,45 @@
+<div class="nav-scrollable">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="editor">
+                <span class="bi bi-pencil-square-nav-menu" aria-hidden="true"></span> Template Editor
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+<style>
+    .nav-scrollable {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-item {
+        padding: 0.5rem 1rem;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+</style>

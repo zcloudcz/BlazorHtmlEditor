@@ -1,0 +1,48 @@
+@using BlazorHtmlEditor.Models
+@using BlazorHtmlEditor.Services
+
+<div class="model-properties-panel">
+    <div class="model-properties-header">
+        Model Properties
+    </div>
+
+    <div class="model-properties-search">
+        <input type="text"
+               placeholder="Search properties..."
+               @bind="searchTerm"
+               @bind:event="oninput" />
+    </div>
+
+    <div class="model-properties-list">
+        @if (Properties != null && Properties.Any())
+        {
+            @foreach (var property in FilteredProperties)
+            {
+                <div class="model-property-item" @onclick="() => OnPropertyClick(property)">
+                    <div class="property-name">
+                        @property.DisplayName
+                        @if (property.IsCollection)
+                        {
+                            <span class="property-badge collection">Collection</span>
+                        }
+                        @if (property.IsComplex)
+                        {
+                            <span class="property-badge complex">Complex</span>
+                        }
+                    </div>
+                    <div class="property-type">@property.TypeName</div>
+                    @if (!string.IsNullOrEmpty(property.Description))
+                    {
+                        <div class="property-description">@property.Description</div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div style="padding: 16px; text-align: center; color: #888;">
+                No properties available
+            </div>
+        }
+    </div>
+</div>

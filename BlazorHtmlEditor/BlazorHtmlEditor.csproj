@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+
+    <!-- Critical for RazorLight: embeds compile-time reference info into .deps.json -->
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+
+    <!-- Ensures reference assemblies are copied to publish output (refs/) -->
+    <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>BlazorHtmlEditor</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>Martin Zahálka</Authors>
+    <Company>Martin Zahálka</Company>
+    <Description>Blazor component library for editing Razor templates with Monaco Editor and live preview using RazorLight. Features include code editor with syntax highlighting, model properties panel, and real-time template rendering.</Description>
+    <PackageTags>blazor;razor;editor;monaco;razorlight;template;html;code-editor</PackageTags>
+    <RepositoryUrl>https://github.com/zcloudcz/BlazorHtmlEditor</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/zcloudcz/BlazorHtmlEditor</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+    <PackageReference Include="RazorLight" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
